@@ -112,6 +112,21 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/feature',async(req,res)=>{
+
+     const query={
+      $project: {
+        longDes: 1,
+        longDes: { $strLenCP: "$longDes" }
+      }
+    }
+      const cursor=blogCollection.find(query)
+      const result=await cursor.toArray()
+      console.log(req.body);
+      res.send(result)
+
+    })
+
     app.get('/recentblog',async(req,res)=>{
 
       const query={}
