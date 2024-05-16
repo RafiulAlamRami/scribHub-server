@@ -160,7 +160,7 @@ async function run() {
     app.get('/getwish/:email',async(req,res)=>{
       const email=req.params.email
       const query={email:email}
-      const result=await wishCollection.findOne(query)
+      const result=await wishCollection.find(query).toArray()
       res.send(result)
     })
 
