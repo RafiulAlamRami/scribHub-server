@@ -79,6 +79,7 @@ async function run() {
 
     const blogCollection=client.db('blogdb').collection('blog')
     const wishCollection=client.db('blogdb').collection('wish')
+    const commentCollection=client.db('blogdb').collection('comment')
 
 
     //  jwt
@@ -170,8 +171,53 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/upblog/:id',async(req,res)=>{
+      const id=req.params.id
+      const query={_id:new ObjectId(id)}
+      const result=await blogCollection.findOne(query)
+      res.send(result)
+    })
 
-    app.post('/addblog',verifyToken,async(req,res)=>{
+    app.put('/upblog/:id',async(req,res)=>{
+      // for update (set data)
+      const id=req.params.id
+      const filter={_id:new ObjectId(id)}
+      const options = { upsert: true };
+      const updateBlog=req.body
+      const blog={
+        $set:{
+          title:updateBlog.title,
+          shortDes:updateBlog.shortDes,
+          longDes:updateBlog.longDes,
+          category:updateBlog.category,
+          photo:updateBlog.photo,
+          year:updateBlog.year,
+          month:updateBlog.month,
+          time:updateBlog.time,
+          date:updateBlog.date,
+        }
+      }
+      const result=await blogCollection.updateOne(filter,blog,options)
+      res.send(result)
+      // console.log(updateCraft);
+    })
+
+    app.post('/addcomment',async(req,res)=>{
+      const newCom=req.body;
+      console.log(newCom);
+      const result=await commentCollection.insertOne(newCom)
+      res.send(result)
+    })
+
+    app.get('/getcomment/:id',async(req,res)=>{
+      const id=req.params.id
+      const query={id:id}
+      const result=await commentCollection.findOne(query)
+      res.send(result)
+    })
+
+
+    app.post('/addblog',async(req,res)=>{
       const newBlog=req.body;
       console.log(newBlog);
       const result=await blogCollection.insertOne(newBlog)
