@@ -240,3 +240,6 @@ app.get('/',(req,res)=>{
     res.send("runninnnnnnnnnnnnnnng")
 })
 
+app.listen(port,(req,res)=>{
+    console.log("from port of : ",port);
+})
